@@ -12,7 +12,7 @@ const CustomPopOver = ({children, placement, trigger, innerChildren}: props) => 
       trigger={trigger}
       placement={placement}
       controlId={`control-id-bottom`}
-      speaker={  <Popover  title="Title">
+      speaker={  <Popover >
             <div>
               {children}  
             </div>

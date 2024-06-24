@@ -5,7 +5,6 @@ import leftArrow from '../../../Image/left-arrow.svg'
 import Button from "../../Atomic/Button";
 import YearMonthSelector from '../YearMonthSelector';
 import CalendarView from '../calendar';
-// import { getDays, getMonthDays, dateFormate, getDayNumber, getCompleteMonthDateList } from '../../../utils/calendarUtility';
 
 type props = {
     children?: string | JSX.Element | JSX.Element[] | any;
@@ -15,33 +14,29 @@ type props = {
     startDate? : Date;
     endDate? : Date;
     onChangeDate? : (param: Date) => void;
+    prevMonthHandle? : (param1: number, param2: number, param3: string) => void;
+    nextMonthHandle? : (param1: number, param2: number, param3: string) => void;
+    monthNumber : number;
   }
-export default function Index({date, onChangeDate, startDate, endDate, monthType}: props) {
+export default function Index({date, onChangeDate, startDate, endDate, monthType, monthNumber, prevMonthHandle, nextMonthHandle}: props) {
     const [defaultDate, setDefaultDate] = useState(date ?  date  : new Date());
-    // const [weekDays, setWeekDays] = useState(getDays());
     const [fullYear, setFullYear] = useState(defaultDate.getFullYear());
-    const [monthNumber, setMonthNumber] = useState(defaultDate.getMonth());
-    // const [allMonthNumber, setAllMonthNumber] = useState<number[]>([]);
     const [isMonthYearShow, setIsMonthYearShow] = useState<boolean>(false);
 
-    // const firstDay = getMonthDays(fullYear, monthNumber, 1);
-    // const lastDay = getMonthDays(fullYear, monthNumber, 0);
-    // const startingDayIndex = getDayNumber(dateFormate(firstDay, "en-US", { weekday: 'long' }));
-    // const daysInMonth = getCompleteMonthDateList(defaultDate);
+    useEffect(() => {
+        if(date)
+        setDefaultDate(date);
+    }, [date])
     
-    
-
-    // useEffect( () => {
-
-    // }, [defaultDate]);
-
-    const prevMonthHandle = () => {
-        setMonthNumber(monthNumber - 1);
+    const prevHandle = () => {
         setDefaultDate(new Date(fullYear, monthNumber - 1));
+        if(prevMonthHandle && monthType)
+            prevMonthHandle(fullYear, monthNumber - 1, monthType)
     }
     const nextHandle = () => {
-        setMonthNumber(monthNumber + 1);
         setDefaultDate(new Date(fullYear, monthNumber + 1));
+        if(nextMonthHandle && monthType)
+            nextMonthHandle(fullYear, monthNumber + 1, monthType)
     }
     const changeDate = (date: Date) => {
         setDefaultDate(date);
@@ -50,9 +45,7 @@ export default function Index({date, onChangeDate, startDate, endDate, monthType
     }
 
     return (
-        <div>
-            Caldendar
-            <Button >Icon</Button>
+        <div className="m-10 pl-10 pt-5 pr-10">
             <div className="custom-cal-item">
                 <div className="custom-date-range-content">
                     <div className="custom-date-header-cont" data-testid="daterange-header">
@@ -61,18 +54,17 @@ export default function Index({date, onChangeDate, startDate, endDate, monthType
                         <span className="custom-date-header">yyyy-MM-dd</span></div>
                     </div>
                 </div>
-            <div className="custom-date-daterange-calendar-group">
+            <div>
                 <div className='custom-date-calendar-header-has-month'>
                     <div className='custom-date-calendar-header-month-toolbar'>
-                        <Button onClick={prevMonthHandle} className='p-5'><img src={leftArrow} alt="pre-arrow" className="calendarIcon" /> </Button>
+                        {/* <Button onClick={prevHandle} className='p-5'><img src={leftArrow} alt="pre-arrow" className="calendarIcon" /> </Button> */}
                         <Button onClick={() => setIsMonthYearShow(!isMonthYearShow)} className="p-5">{defaultDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long' })}</Button>
-                        <Button onClick={nextHandle} className='p-5'><img src={rightArrow} alt="next-arrow" className="calendarIcon" /> </Button>
+                        {/* <Button onClick={nextHandle} className='p-5'><img src={rightArrow} alt="next-arrow" className="calendarIcon" /> </Button> */}
                     </div>
                 </div>
                 {isMonthYearShow ? <YearMonthSelector date={defaultDate} /> : 
                 <CalendarView date={defaultDate} startDate={startDate} endDate={endDate} changeDate={changeDate} monthType={monthType}/> }
             </div>
-            {/* <img className="calendarIcon" src={calendarIcon} alt="Calendar" /> */}
         </div>
     )
 }

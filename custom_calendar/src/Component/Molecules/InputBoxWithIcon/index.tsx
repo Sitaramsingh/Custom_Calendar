@@ -1,5 +1,8 @@
 import React from 'react'
+import { Input, InputGroup, Grid, Row, Col } from 'rsuite';
+import CalendarIcon   from '@rsuite/icons/Calendar';
 import Button from '../../Atomic/Button'
+import './index.css';
 
 type props = {
   placeholder?: string;
@@ -11,9 +14,13 @@ type props = {
 }
 export default function Index({placeholder, onChange, name, id, className}: props) {
   return (
-    <div className="wrapper">
-     <input name={name} id={id} className={className} placeholder= {placeholder}  onChange={onChange} />
-    <Button className="icon">Icon</Button>
+    <div className="inputContainer flex  overflow-y-auto flex-col ">
+      <InputGroup >
+        <Input placeholder={placeholder} />
+        <InputGroup.Addon>
+          <CalendarIcon />
+        </InputGroup.Addon>
+      </InputGroup>
   </div>
    
   )
