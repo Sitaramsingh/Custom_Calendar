@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+.calendarIcon{
+    height: 16px;
+    width: 16px;
+    padding: 2px;
+}
+.calendarIcon path {
+    fill: #000;
+  }
+.custom-date-range-content{
+    border-radius: 6px;
+    box-shadow: 0 4px 4px rgba(0,0,0,.12),0 0 10px rgba(0,0,0,.06);
+}
+.custom-date-header-cont{
+    border-bottom: 1px solid #e5e5ea;
+    border-bottom: 1px solid var(--rs-border-primary);
+    font-size: 14px;
+    line-height: 1.42857143;
+    padding: 8px 12px;
+}
+.custom-date-daterange-calendar-group{
+
+}
+.custom-date-calendar{
+
+}
+.custom-date-calendar-header-has-month{
+    text-align: center;
+    width: 100%;
+}
+.custom-date-calendar-header-month-toolbar{
+    display: block;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+}
+.custom-date-calendar-header-row{
+    display: flex;
+}
+.custom-date-calendar-row{
+    display: flex;
+}
+.custom-date--table-header-cell{
+    padding: 4px;
+}
