@@ -4,8 +4,9 @@ import './index.css'
 
 type props = {
   date? : Date;
+  changeDate? :(param: Date) => void;
 }
-export default function Index({date}: props) {
+export default function Index({date, changeDate }: props) {
   const currentDate = date ?  date :new Date() ;
   const currentYear = currentDate.getFullYear();
   return (
@@ -18,11 +19,10 @@ export default function Index({date}: props) {
       {Array.from({ length: (100) }, (_, i) => {
         return (
           <div className='p-1'>
-            <SingleYearMonth year={currentYear + i} />
+            <SingleYearMonth year={currentYear + i} changeDate={changeDate} />
           </div>
         )
       })}
-
     </div>
 
   )

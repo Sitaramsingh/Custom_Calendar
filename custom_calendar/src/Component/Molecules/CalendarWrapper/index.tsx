@@ -42,18 +42,11 @@ export default function Index({date, onChangeDate, startDate, endDate, monthType
         setDefaultDate(date);
         if(onChangeDate)
         onChangeDate(date);
+        setIsMonthYearShow(false)
     }
 
     return (
         <div className="m-10 pl-10 pt-5 pr-10">
-            <div className="custom-cal-item">
-                <div className="custom-date-range-content">
-                    <div className="custom-date-header-cont" data-testid="daterange-header">
-                        <span className="custom-date-header">yyyy-MM-dd</span>
-                        <span className="custom-date-header-character"> ~ </span>
-                        <span className="custom-date-header">yyyy-MM-dd</span></div>
-                    </div>
-                </div>
             <div>
                 <div className='custom-date-calendar-header-has-month'>
                     <div className='custom-date-calendar-header-month-toolbar'>
@@ -62,7 +55,7 @@ export default function Index({date, onChangeDate, startDate, endDate, monthType
                         {/* <Button onClick={nextHandle} className='p-5'><img src={rightArrow} alt="next-arrow" className="calendarIcon" /> </Button> */}
                     </div>
                 </div>
-                {isMonthYearShow ? <YearMonthSelector date={defaultDate} /> : 
+                {isMonthYearShow ? <YearMonthSelector date={defaultDate}  changeDate={changeDate}/> : 
                 <CalendarView date={defaultDate} startDate={startDate} endDate={endDate} changeDate={changeDate} monthType={monthType}/> }
             </div>
         </div>

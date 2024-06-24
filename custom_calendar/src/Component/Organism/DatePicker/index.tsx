@@ -62,6 +62,14 @@ export default function Index({ }: props) {
       <CustomPopOver placement= "bottom" trigger="click" innerChildren={ <div className="wrapper">
           <InputBoxWithIcon placeholder='yyyy-MM-dd ~ yyyy-MM-dd' />
         </div>  }>
+        <div className="custom-cal-item">
+        <div className="custom-date-range-content custom-date-header-cont">
+            <div className="custom-date-header-cont" data-testid="daterange-header">
+                <span className="custom-date-header">yyyy-MM-dd</span>
+                <span className="custom-date-header-character"> ~ </span>
+                <span className="custom-date-header">yyyy-MM-dd</span></div>
+            </div>
+        </div>
       <div className='grid grid-cols-2 gap-2 custom-date-range-content ' >
         <Calendar
           date={startDate}
