@@ -4,7 +4,7 @@ import Dashboard from './Pages/Dashboard'
 
 function App() {
   return (
-    <div className="bg-gray  text-black">
+    <div className="bg-gray  text-black  ">
       <Dashboard />
     </div>
   );

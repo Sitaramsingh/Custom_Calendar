@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import Calendar from '../../Molecules/CalendarWrapper'
 import CustomPopOver from '../../Molecules/popover';
-import InputBox from '../../Atomic/InputBox';
-import Button from '../../Atomic/Button';
 import InputBoxWithIcon from '../../Molecules/InputBoxWithIcon';
+import { getTodayDate, getDateRange, dateFormate } from '../../../utils/calendarUtility'
 
 import './index.css';
 
@@ -13,85 +12,98 @@ type props = {
   date?: Date;
   startDate?: Date;
   endDate?: Date;
-  onChangeDate?: (param: Date) => void;
+  onDateChange?: (param: Date, param2: Date, param3: Date) => void;
+  selectedDateRangeGetter?: (param: Array<Date>, param2: Array<Date>) => void;
 }
-
-export default function Index({ }: props) {
-  const currentDate = new Date();
-  const [startDate, setStartDate] = useState(currentDate);
-  const [endDate, setEndDate] = useState(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+export default function Index({ date, onDateChange, selectedDateRangeGetter }: props) {
+  const currentDate = getTodayDate();
   const [startSelectedDate, setStartSelectedDate] = useState<Date>();
   const [endSelectedDate, setEndSelectedDate] = useState<Date>();
-  const [monthNumber, setMonthNumber] = useState(currentDate.getMonth());
+  const [defaultDate, setDefaultDate] = useState(date ? date : getTodayDate());
+  const [dateSelectCounter, setDateSelectCounter] = useState<number>(0);
+  const [nextMonthDate, setNextMonthDate] = useState(date ? new Date(date.getFullYear(), date.getMonth() + 1, 1) : new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
+
+  useEffect(() => {
+    if( selectedDateRangeGetter && startSelectedDate && endSelectedDate){
+    const weekDateRange =  getDateRange(startSelectedDate, endSelectedDate);
+      selectedDateRangeGetter(weekDateRange, [])
+    }
+    if(defaultDate && onDateChange && startSelectedDate && endSelectedDate){
+      onDateChange(defaultDate,  startSelectedDate, endSelectedDate)
+    }
+  }, [ defaultDate , startSelectedDate, endSelectedDate, selectedDateRangeGetter])
+  
+  useEffect(() => {
+    if (nextMonthDate <= defaultDate) {
+      setNextMonthDate(new Date(defaultDate.getFullYear(), defaultDate.getMonth() + 1, 1))
+    }
+  }, [defaultDate])
+
+  const onChangeDateFromPicker = (date: Date) => {
+    setDefaultDate(date);
+  }
+
+  const onSelecteDate = (date: Date) => {
+    setDateSelectCounter(dateSelectCounter + 1);
+    if (dateSelectCounter === 2) {
+      setStartSelectedDate(date);
+      setEndSelectedDate(date);
+      setDateSelectCounter(1);
+    } else {
+      if (endSelectedDate) {
+        if (date < endSelectedDate) {
+          setStartSelectedDate(date);
+        } else if (date > endSelectedDate) {
+          setEndSelectedDate(date);
+        } else {
+          setStartSelectedDate(date);
+          setEndSelectedDate(date);
+        }
+      }
+      else {
+        setStartSelectedDate(date);
+        setEndSelectedDate(date);
+      }
+    }
+  }
+
  
-  const onChangeStartDate = (date: Date) => {
-    setStartDate(date);
-    setStartSelectedDate(date);
-  }
-
-  const onChangeEndDate = (date: Date) => {
-    setEndDate(date);
-    setEndSelectedDate(date);
-  }
-
-  const prevMonthHandle = (fullYear: number, monthN: number, monthType: string) => {
-    setMonthNumber(monthN === 12 ? 1 : monthN);
-    if(monthType === "future"){
-     const monthDate = new Date(fullYear, monthN)
-     if(monthDate  >= endDate){
-        setStartDate(new Date(fullYear, monthN));
-        setEndDate(new Date(fullYear, monthN + 1));
-     }
-      
-    }
-  }
-  const nextMonthHandle = (fullYear: number, monthN: number, monthType: string) => {
-    setMonthNumber(monthN === 12 ? 1 : monthN);
-    if(monthType === "current"){
-     const monthDate = new Date(fullYear, monthN)
-     if(monthDate  >= endDate){
-        setStartDate(new Date(fullYear, monthN));
-        setEndDate(new Date(fullYear, monthN + 1));
-     }
-    }
-    // setEndDate(new Date(fullYear, monthN));
-  }
 
   return (
-    <div  >
-      <CustomPopOver placement= "bottom" trigger="click" innerChildren={ <div className="wrapper">
-          <InputBoxWithIcon placeholder='yyyy-MM-dd ~ yyyy-MM-dd' />
-        </div>  }>
-        <div className="custom-cal-item">
-        <div className="custom-date-range-content custom-date-header-cont">
-            <div className="custom-date-header-cont" data-testid="daterange-header">
-                <span className="custom-date-header">yyyy-MM-dd</span>
+    <div className="text-center ml-10px">
+      <CustomPopOver placement="bottom" trigger="click" innerChildren={<div className="wrapper max-w-2xl mb-2">
+        <InputBoxWithIcon placeholder='yyyy-MM-dd ~ yyyy-MM-dd' value = { startSelectedDate && endSelectedDate ?  `${dateFormate(startSelectedDate, "en-US", { year:'numeric',month: 'numeric', day: 'numeric' })} ~  ${dateFormate(endSelectedDate, "en-US", { year:'numeric',month: 'numeric', day: 'numeric' })}`  : ''} />
+      </div>}>
+        <div className="custom-date-range-content max-w-2xl">
+          <div className="custom-cal-item">
+            <div className="custom-date-range-content custom-date-header-cont">
+              <div className="custom-date-header-cont" data-testid="daterange-header">
+                <span className="custom-date-header"> {startSelectedDate  ? dateFormate(startSelectedDate, "en-US", { year:'numeric',month: 'numeric', day: 'numeric' }): 'yyyy-MM-dd'}</span>
                 <span className="custom-date-header-character"> ~ </span>
-                <span className="custom-date-header">yyyy-MM-dd</span></div>
+                <span className="custom-date-header">{endSelectedDate  ? dateFormate(endSelectedDate, "en-US", { year:'numeric',month: 'numeric', day: 'numeric' }): 'yyyy-MM-dd'}</span></div>
             </div>
+          </div>
+          <div className='grid grid-cols-2  ml-10px ' >
+            <div className="border-r border-gray">
+              <Calendar
+                date={defaultDate}
+                startDate={startSelectedDate}
+                endDate={endSelectedDate}
+                onChangeDate={onChangeDateFromPicker}
+                onSelecteDate={onSelecteDate}
+              />
+            </div>
+            <div>
+              <Calendar
+                date={nextMonthDate}
+                startDate={startSelectedDate}
+                endDate={endSelectedDate}
+                onChangeDate={onChangeDateFromPicker}
+                onSelecteDate={onSelecteDate}
+              />
+            </div>
+          </div>
         </div>
-      <div className='grid grid-cols-2 gap-2 custom-date-range-content ' >
-        <Calendar
-          date={startDate}
-          startDate={startSelectedDate}
-          endDate={endSelectedDate}
-          onChangeDate={onChangeStartDate}
-          monthType="current"
-          prevMonthHandle={prevMonthHandle}
-          nextMonthHandle={nextMonthHandle}
-          monthNumber={monthNumber}
-        />
-        <Calendar
-          date={endDate}
-          startDate={startSelectedDate}
-          endDate={endSelectedDate}
-          onChangeDate={onChangeEndDate}
-          monthType="future"
-          prevMonthHandle={prevMonthHandle}
-          nextMonthHandle={nextMonthHandle}
-          monthNumber={monthNumber}
-        />
-      </div>
       </CustomPopOver>
     </div>
   )

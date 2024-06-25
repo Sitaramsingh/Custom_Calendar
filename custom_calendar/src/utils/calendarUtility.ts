@@ -1,6 +1,14 @@
+function getTodayDate(date?: Date){
+   if(date){
+    return new Date(date);
+   }else{
+    return new Date();
+   }
+}
+
 function getDays() {
     const locale = 'en-US' // Change this based on client settings
-    const date = new Date()
+    const date = getTodayDate()
 
     const weekdays = []
     while (!weekdays[date.getDay()]) {
@@ -69,12 +77,28 @@ const currentMMOnth = dateObject.getMonth() + 1;
     }
     return result;
 }
+
+function getDateRange (startDate: Date, endDate: Date) {
+    const dateArray = [];
+    const currentDate = getTodayDate(startDate);
+    const stopDate = getTodayDate(endDate);
+    while (currentDate <= stopDate) {
+        dateArray.push( getTodayDate(currentDate))
+        currentDate.setDate(currentDate.getDate() + 1)
+        // currentDate = getTodayDate(day);
+    }
+    return dateArray;
+    }
+
+
 export {
     getDays,
     getMonthDays,
     getDayNumber,
     dateFormate,
-    getCompleteMonthDateList
+    getCompleteMonthDateList,
+    getDateRange,
+    getTodayDate
 };
 
 
