@@ -21,7 +21,7 @@ export default function Index() {
     setWeekendRange(weekendRange);
   }
 
-  console.log()
+  console.log(startDate, 'startDate', endDate, 'endDate', allDateRange, 'allDateRange', weekendRange, 'weekendRange');
   return (
     <div>
       <div  >

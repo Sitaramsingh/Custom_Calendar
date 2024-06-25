@@ -33,6 +33,8 @@ export default function Index({ date, onChangeDate, startDate, endDate, prevMont
         if (onChangeDate)
             onChangeDate(date);
         setIsMonthYearShow(false)
+        setYearType('');
+        
     }
 
     const onChangeDateFromCal = (date: Date) => {
@@ -45,13 +47,18 @@ export default function Index({ date, onChangeDate, startDate, endDate, prevMont
         setIsMonthYearShow(false)
     }
 
+    const onSelectDateHearDate = () =>{
+        setIsMonthYearShow(!isMonthYearShow);
+        setYearType('');
+    }
+
     return (
         <div className="m-2 pl-2 pt-2 pr-2">
             <div>
                 <div className='custom-date-calendar-header-has-month'>
                     <div className='custom-date-calendar-header-month-toolbar'>
                         {/* <Button  className='p-5'><img src={leftArrow} alt="pre-arrow" className="calendarIcon" /> </Button> */}
-                        <Button onClick={() => setIsMonthYearShow(!isMonthYearShow)} className="p-5">{defaultDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long' })}</Button>
+                        <Button onClick={onSelectDateHearDate} className="p-5">{defaultDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long' })}</Button>
                         {/* <Button  className='p-5'><img src={rightArrow} alt="next-arrow" className="calendarIcon" /> </Button> */}
                     </div>
                 </div>

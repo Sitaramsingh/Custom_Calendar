@@ -17,6 +17,8 @@ export default function Index({ date, changeDate, yearType, handleYearSelect }: 
   
   return (
     <div className="calendarContainer flex  overflow-y-auto flex-col ">
+      
+      { !yearType &&  <div>
       <Button className="btn-style" onClick={() => handleYearSelect('prev')}>
         With Prevous Year
       </Button>
@@ -26,7 +28,8 @@ export default function Index({ date, changeDate, yearType, handleYearSelect }: 
       <Button className="btn-style"  onClick={() => handleYearSelect('')} >
         Go back to calender
       </Button>
-      {yearType  === 'next'  && Array.from({ length: (100) }, (_, i) => {
+        </div> }
+      {yearType  === 'prev'  && Array.from({ length: (100) }, (_, i) => {
         return (
           <SingleYearMonth year={currentYear - i} changeDate={changeDate} />
         )
